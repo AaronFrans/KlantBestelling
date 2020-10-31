@@ -1,4 +1,5 @@
 ﻿using System;
+using static DomainLayer.Domain.ProductEnum;
 
 namespace DomainLayer.Domain
 {
@@ -14,7 +15,7 @@ namespace DomainLayer.Domain
         /// <summary>
         /// Product ordered.
         /// </summary>
-        public ProductEnum Product { get; private set; }
+        public ProductType Product { get; private set; }
         /// <summary>
         /// Amount ordered.
         /// </summary>
@@ -30,7 +31,7 @@ namespace DomainLayer.Domain
         /// <param name="product">Product ordered.</param>
         /// <param name="amount">Amount ordered.</param>
         /// <param name="client">Client who ordered the order.</param>
-        public Order(ProductEnum product, int amount, Client client)
+        public Order(ProductType product, int amount, Client client)
         {
             Product = product;
             if (amount < 1)
