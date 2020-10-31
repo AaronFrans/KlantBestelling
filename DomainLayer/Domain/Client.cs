@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static DomainLayer.Domain.ProductEnum;
 
 namespace DomainLayer.Domain
 {
@@ -36,7 +37,7 @@ namespace DomainLayer.Domain
             Name = name;
             if (name == string.Empty)
                 throw new DomainException("Een naam mag niet leeg zijn");
-            if (addres.Length < 10)
+            if (addres.Length < 9)
                 throw new DomainException("Een adres moet minstens 10 karakters lang zijn");
             Addres = addres;
         }
@@ -46,7 +47,7 @@ namespace DomainLayer.Domain
         /// </summary>
         /// <param name="product">Product ordered.</param>
         /// <param name="amount">Amount ordered.</param>
-        public void AddOrder(ProductEnum product, int amount)
+        public void AddOrder(ProductType product, int amount)
         {
             if (Orders.Any(o => o.Product == product))
                 Orders.Single(o => o.Product == product).AddAmount(amount);
