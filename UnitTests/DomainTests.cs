@@ -72,13 +72,13 @@ namespace UnitTests
             ProductType expectedType = ProductType.Duvel;
             int expectedLenght = 1;
 
-            client.AddOrder(ProductType.Duvel, 10);
+            Client.AddOrder(ProductType.Duvel, 10, client);
 
             client.Orders.Count.Should().Be(expectedLenght);
             client.Orders[0].Product.Should().Be(expectedType);
             client.Orders[0].Amount.Should().Be(expectedAmount);
 
-            client.AddOrder(ProductType.Duvel, 5);
+            Client.AddOrder(ProductType.Duvel, 5, client);
 
             expectedAmount += 5;
 
@@ -86,7 +86,7 @@ namespace UnitTests
             client.Orders[0].Product.Should().Be(expectedType);
             client.Orders[0].Amount.Should().Be(expectedAmount);
 
-            client.AddOrder(ProductType.Leffe, 5);
+            Client.AddOrder(ProductType.Leffe, 5, client);
 
             expectedLenght += 1;
             ProductType expectedTypeTwo = ProductType.Leffe;
