@@ -10,7 +10,7 @@ namespace DataLayer
     /// <summary>
     /// Connects to the database.
     /// </summary>
-    class ClientOrderContext : DbContext
+    public class ClientOrderContext : DbContext
     {
         private string connectionString;
 
@@ -70,5 +70,37 @@ namespace DataLayer
         /// Gives acces to the Clients in the database.
         /// </summary>
         public DbSet<DClient> Clients { get; set; }
+    }
+
+    /// <summary>
+    /// Used to easily test the functionality of the database.
+    /// </summary>
+    public class ClientOrderContextTest : ClientOrderContext
+    {
+        /// <summary>
+        /// Empty contructor, it will connect  to the test databse.
+        /// </summary>
+        public ClientOrderContextTest() : base("Test")
+        {
+
+        }
+        /// <summary>
+        /// Constructor used to connect to the test database.
+        /// </summary>
+        /// <param name="keepExistingDB">Determines if the test database should be emptied. It will delete by default.</param>
+        public ClientOrderContextTest(bool keepExistingDB = false) : base("Test")
+        {
+            if (keepExistingDB)
+            {
+                Database.EnsureCreated();
+            }
+            else
+            {
+                Database.EnsureDeleted();
+                Database.EnsureCreated();
+            }
+
+
+        }
     }
 }

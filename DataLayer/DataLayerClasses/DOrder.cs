@@ -1,6 +1,8 @@
 ﻿
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using static DomainLayer.Domain.ProductEnum;
 
@@ -9,11 +11,12 @@ namespace DataLayer.DataLayerClasses
     /// <summary>
     /// An Order in the database.
     /// </summary>
-    class DOrder
+    public class DOrder
     {
         /// <summary>
         /// Id of the order.
         /// </summary>
+        [Key]
         public int Id { get; set; }
         /// <summary>
         /// Product ordered.
@@ -23,6 +26,14 @@ namespace DataLayer.DataLayerClasses
         /// Amount ordered.
         /// </summary>
         public int Amount { get; set; }
+
+        /// <summary>
+        /// Empty constructor for EF Core.
+        /// </summary>
+        public DOrder()
+        {
+
+        }
 
         /// <summary>
         /// Used to make a Order object.

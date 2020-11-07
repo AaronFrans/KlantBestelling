@@ -1,4 +1,5 @@
-﻿using DomainLayer;
+﻿using DataLayer.Repositories;
+using DomainLayer;
 using DomainLayer.Repositories;
 using System;
 using System.Collections.Generic;
@@ -6,20 +7,40 @@ using System.Text;
 
 namespace DataLayer
 {
-    class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        public IOrderRepository Orders => throw new NotImplementedException();
 
-        public IClientRepository Clients => throw new NotImplementedException();
+        private ClientOrderContext context;
+
+        public IOrderRepository Orders { get; private set; }
+
+        public IClientRepository Clients { get; private set; }
+
+        public UnitOfWork(ClientOrderContext context)
+        {
+            this.context = context;
+            Orders = new OrderRepository(context);
+            Clients = new ClientRepository(context);
+        }
 
         public int Complete()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
+        /// <summary>
+        /// Disposes of the context.
+        /// </summary>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            context.Dispose();
         }
     }
 }

@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using static DomainLayer.Domain.ProductEnum;
 
 namespace DataLayer.DataLayerClasses
 {
-    class DClient
+    public class DClient
     {
         /// <summary>
         /// Id of the client.
         /// </summary>
+        [Key]
         public int Id { get; set; }
         /// <summary>
         /// Name of the client.
@@ -25,6 +27,15 @@ namespace DataLayer.DataLayerClasses
         /// </summary>
         public List<DOrder> Orders { get; set; } = new List<DOrder>();
 
+
+        /// <summary>
+        /// Empty constructor for EF Core.
+        /// </summary>
+        public DClient()
+        {
+
+        }
+
         /// <summary>
         /// Used to make a Client object.
         /// </summary>
@@ -33,10 +44,6 @@ namespace DataLayer.DataLayerClasses
         public DClient(string name, string addres)
         {
             Name = name;
-            if (name == string.Empty)
-                throw new DataException("Een naam mag niet leeg zijn");
-            if (addres.Length < 9)
-                throw new DataException("Een adres moet minstens 10 karakters lang zijn");
             Addres = addres;
         }
 
@@ -51,6 +58,5 @@ namespace DataLayer.DataLayerClasses
         {
             return HashCode.Combine(Name, Addres);
         }
-
     }
 }

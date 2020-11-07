@@ -5,14 +5,14 @@ using System.Text;
 
 namespace DataLayer.DataLayerClasses
 {
-    class Mapper
+    public class Mapper
     {
         /// <summary>
         /// Transforms a Order object into a DOrder object.
         /// </summary>
         /// <param name="order">Order to transform.</param>
         /// <returns>The new DOrder object.</returns>
-        public DOrder ToDOrder(Order order)
+        static public DOrder ToDOrder(Order order)
         {
             DOrder toReturn = new DOrder(order.Product, order.Amount);
             toReturn.Id = order.Id;
@@ -23,7 +23,7 @@ namespace DataLayer.DataLayerClasses
         /// </summary>
         /// <param name="client">Client to transform.</param>
         /// <returns>The new DClient object.</returns>
-        public DClient ToDClient(Client client)
+        static public DClient ToDClient(Client client)
         {
             DClient toReturn = new DClient(client.Name, client.Addres);
             toReturn.Id = client.Id;
@@ -43,17 +43,16 @@ namespace DataLayer.DataLayerClasses
         /// </summary>
         /// <param name="dClient">DClient to transforms.</param>
         /// <returns>The new Client object.</returns>
-        public Client ToClient(DClient dClient)
+        static public Client ToClient(DClient dClient)
         {
             Client toReturn = new Client(dClient.Name, dClient.Addres);
             toReturn.Id = dClient.Id;
             List<Order> orders = new List<Order>();
             foreach (var item in dClient.Orders)
             {
-                orders.Add(ToOrder(item, toReturn));
+                toReturn.AddOrder(item.Product, item.Amount);
 
             }
-            toReturn.Orders = orders;
 
             return toReturn;
         }
@@ -63,7 +62,7 @@ namespace DataLayer.DataLayerClasses
         /// <param name="dOrder">DOrder to transforms.</param>
         /// <param name="client">Client who made the order.</param>
         /// <returns>The new Order object.</returns>
-        public Order ToOrder(DOrder dOrder, Client client)
+        static public Order ToOrder(DOrder dOrder, Client client)
         {
             Order toReturn = new Order(dOrder.Product, dOrder.Amount, client);
             toReturn.Id = dOrder.Id;

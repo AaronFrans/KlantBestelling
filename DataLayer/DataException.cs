@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DataLayer
 {
-    class DataException : Exception
+    public class DataException : Exception
     {
         public DataException(string msg) : base(msg)
         {

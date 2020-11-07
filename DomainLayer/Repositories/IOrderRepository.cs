@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static DomainLayer.Domain.ProductEnum;
 
 namespace DomainLayer.Repositories
 {
@@ -15,19 +16,21 @@ namespace DomainLayer.Repositories
         /// </summary>
         /// <param name="clientId">Id of the client who makes the order.</param>
         /// <param name="order">Th order</param>
-        public void MakeOrder(int clientId, Order order);
+        /// <returns>The new id int the database</returns>
+        public int MakeOrder(int clientId, ProductType product, int amount);
         /// <summary>
         /// Retrieve an order froom the database.
         /// </summary>
         /// <param name="orderId">Id of the order.</param>
-        public void GetOrder(int orderId);
+        /// <returns>The order from the database</returns>
+        public Order GetOrder(int orderId, int clientId);
         /// <summary>
         /// Update an order in the database.
         /// </summary>
         /// <param name="clientId">Id of the client who makes the order. </param>
         /// <param name="orderId">Id of the order to update.</param>
-        /// <param name="Order">Updated order.</param>
-        public void UpdateOrder(int clientId, int orderId, Order updatedOrder);
+        /// <param name="updatedOrder">Updated order.</param>
+        public void UpdateOrder(int clientId, int orderId, ProductType product, int amount);
         /// <summary>
         /// Remove an order from the database.
         /// </summary>

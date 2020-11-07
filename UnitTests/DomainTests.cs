@@ -72,13 +72,13 @@ namespace UnitTests
             ProductType expectedType = ProductType.Duvel;
             int expectedLenght = 1;
 
-            Client.AddOrder(ProductType.Duvel, 10, client);
+            client.AddOrder(ProductType.Duvel, 10);
 
             client.Orders.Count.Should().Be(expectedLenght);
             client.Orders[0].Product.Should().Be(expectedType);
             client.Orders[0].Amount.Should().Be(expectedAmount);
 
-            Client.AddOrder(ProductType.Duvel, 5, client);
+            client.AddOrder(ProductType.Duvel, 5);
 
             expectedAmount += 5;
 
@@ -86,7 +86,7 @@ namespace UnitTests
             client.Orders[0].Product.Should().Be(expectedType);
             client.Orders[0].Amount.Should().Be(expectedAmount);
 
-            Client.AddOrder(ProductType.Leffe, 5, client);
+            client.AddOrder(ProductType.Leffe, 5);
 
             expectedLenght += 1;
             ProductType expectedTypeTwo = ProductType.Leffe;
@@ -97,6 +97,20 @@ namespace UnitTests
             client.Orders[0].Amount.Should().Be(expectedAmount);
             client.Orders[1].Product.Should().Be(expectedTypeTwo);
             client.Orders[1].Amount.Should().Be(expectedAmountTwo);
+        }
+
+        /// <summary>
+        /// Test the equals for Client objects.
+        /// </summary>
+        [TestMethod]
+        public void ClientEquals_Tests()
+        {
+            Client c1 = new Client("Test", "Test Addres");
+            Client c2 = new Client("Test", "Test Addres");
+
+            bool result = c1.Equals(c2);
+
+            result.Should().BeTrue();
         }
     }
 }
