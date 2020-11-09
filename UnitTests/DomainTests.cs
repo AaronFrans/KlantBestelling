@@ -98,5 +98,19 @@ namespace UnitTests
             client.Orders[1].Product.Should().Be(expectedTypeTwo);
             client.Orders[1].Amount.Should().Be(expectedAmountTwo);
         }
+
+        /// <summary>
+        /// Test the equals for Client objects.
+        /// </summary>
+        [TestMethod]
+        public void ClientEquals_Tests()
+        {
+            Client c1 = new Client("Test", "Test Addres");
+            Client c2 = new Client("Test", "Test Addres");
+
+            bool result = c1.Equals(c2);
+
+            result.Should().BeTrue();
+        }
     }
 }

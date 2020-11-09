@@ -22,10 +22,19 @@ namespace DomainLayer.Domain
         /// Addres of the client.
         /// </summary>
         public string Addres { get; private set; }
+
+        private List<Order> orders = new List<Order>();
+
         /// <summary>
         /// Orders made by the client.
         /// </summary>
-        public List<Order> Orders { get; private set; } = new List<Order>();
+        public IReadOnlyList<Order> Orders
+        {
+            get
+            {
+                return orders.AsReadOnly();
+            }
+        }
 
         /// <summary>
         /// Used to make a Client object.
@@ -34,12 +43,8 @@ namespace DomainLayer.Domain
         /// <param name="addres">Addres of the client.</param>
         public Client(string name, string addres)
         {
-            Name = name;
-            if (name == string.Empty)
-                throw new DomainException("Een naam mag niet leeg zijn");
-            if (addres.Length < 9)
-                throw new DomainException("Een adres moet minstens 10 karakters lang zijn");
-            Addres = addres;
+            SetName(name);
+            SetAddres(addres);
         }
 
         /// <summary>
@@ -49,10 +54,34 @@ namespace DomainLayer.Domain
         /// <param name="amount">Amount ordered.</param>
         public void AddOrder(ProductType product, int amount)
         {
-            if (Orders.Any(o => o.Product == product))
-                Orders.Single(o => o.Product == product).AddAmount(amount);
+            if (orders.Any(o => o.Product == product))
+                orders.Single(o => o.Product == product).AddAmount(amount);
             else
-                Orders.Add(new Order(product, amount, this));
+                orders.Add(new Order(product, amount, this));
+        }
+
+        /// <summary>
+        /// Change name of client.
+        /// </summary>
+        /// <param name="name"></param>
+        public void SetName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new DomainException("Een naam mag niet leeg zijn");
+            Name = name;
+        }
+
+        /// <summary>
+        /// Change addres of client.
+        /// </summary>
+        /// <param name="addres"></param>
+        public void SetAddres(string addres)
+        {
+            if (string.IsNullOrWhiteSpace(addres))
+                throw new DomainException("Een adres moet minstens 10 karakters lang zijn");
+            if(addres.Length < 10)
+                throw new DomainException("Een adres moet minstens 10 karakters lang zijn");
+            Addres = addres;
         }
 
         public override bool Equals(object obj)

@@ -46,6 +46,10 @@ namespace DomainLayer.Domain
         /// <param name="amount">Amount to add.</param>
         public void AddAmount(int amount)
         {
+            if(amount < 1)
+            {
+                throw new DomainException("Het aantal moet groeter zijn dan 1");
+            }
             Amount += amount;
         }
 
