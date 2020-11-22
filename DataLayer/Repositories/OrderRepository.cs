@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace DataLayer.Repositories
 {
@@ -28,12 +27,31 @@ namespace DataLayer.Repositories
                 throw new DataException("Het gegeven orderId is niet in de database");
             }
 
-
-
-            context.Orders.Remove(new DOrder() { Id = orderId });
+            context.Orders.Remove(context.Orders.Single(c => c.Id == orderId));
         }
 
-        public Order GetOrder(int orderId, int clientId )
+        public Order GetOrder(ProductType product, int clientId)
+        {
+
+            if (!context.Clients.AsNoTracking().Any(c => c.Id == clientId))
+            {
+                throw new DataException("Het gegeven klantId is niet in de database");
+            }
+
+            if (!context.Clients.AsNoTracking().Include(c => c.Orders).Single(c => c.Id == clientId).Orders.Any(O => O.Product == product))
+            {
+                throw new DataException("Het gegeven klantId heeft geen order met het gegeven orderId");
+            }
+
+
+            var client = Mapper.ToClient(context.Clients.Single(c => c.Id == clientId));
+
+            return Mapper.ToOrder(context
+                .Clients.Include(c => c.Orders).Single(c => c.Id == clientId)
+                .Orders.Single(o => o.Product == product), client);
+        }
+
+        public Order GetOrder(int orderId, int clientId)
         {
             if (!context.Orders.AsNoTracking().Any(c => c.Id == orderId))
             {
@@ -45,7 +63,7 @@ namespace DataLayer.Repositories
                 throw new DataException("Het gegeven klantId is niet in de database");
             }
 
-            if(!context.Clients.AsNoTracking().Include(c=> c.Orders).Single(c => c.Id == clientId).Orders.Any(O => O.Id == orderId))
+            if (!context.Clients.AsNoTracking().Include(c => c.Orders).Single(c => c.Id == clientId).Orders.Any(O => O.Id == orderId))
             {
                 throw new DataException("Het gegeven klantId heeft geen order met het gegeven orderId");
             }
@@ -56,26 +74,27 @@ namespace DataLayer.Repositories
             return Mapper.ToOrder(context.Orders.Single(c => c.Id == orderId), client);
         }
 
-        public int MakeOrder(int clientId, ProductType product, int amount)
+        public void MakeOrder(int clientId, ProductType product, int amount)
         {
             if (!context.Clients.Any(c => c.Id == clientId))
             {
                 throw new DataException("The given clientId is not in the database");
             }
 
-            var client = Mapper.ToClient(context.Clients.Single(c => c.Id == clientId));
+            var client = Mapper.ToClient(context.Clients.Include(c => c.Orders).Single(c => c.Id == clientId));
 
             client.AddOrder(product, amount);
 
             var dOrder = Mapper.ToDOrder(client.Orders.Single(o => o.Product == product));
 
-            context.Clients.Single(c => c.Id == clientId).Orders.Add(dOrder);
+            var clients = context.Clients.Include(c => c.Orders).Single(c => c.Id == clientId);
 
-            context.SaveChanges();
+            if (!clients.Orders.Any(o => o.Product == product))
+                clients.Orders.Add(dOrder);
+            else
+                clients.Orders.Single(o => o.Product == product).Amount = dOrder.Amount;
 
-            int toReturnId = dOrder.Id;
 
-            return toReturnId;
         }
 
         public void UpdateOrder(int clientId, int orderId, ProductType product, int amount)
@@ -90,25 +109,24 @@ namespace DataLayer.Repositories
                 throw new DataException("Het gegeven klantId is niet in de database");
             }
 
-            if (!context.Clients.Include(d=> d.Orders).Single(c => c.Id == clientId).Orders.Any(o=> o.Product == product))
+            if (!context.Clients.Include(d => d.Orders).Single(c => c.Id == clientId).Orders.Any(o => o.Product == product))
             {
                 throw new DataException("De gegeven klant heeft geen bestelling van het gegeven type.");
             }
 
-            if(amount < 1)
-            {
-                throw new DataException("De hoeveelheid moet groter zijn dan 0");
-            }
-
-            if(!context.Clients.AsNoTracking().Include(c => c.Orders).Single(c => c.Id == clientId).Orders.Any(O => O.Id == orderId))
+            if (!context.Clients.AsNoTracking().Include(c => c.Orders).Single(c => c.Id == clientId).Orders.Any(O => O.Id == orderId))
             {
                 throw new DataException("Het gegeven klantId heeft geen order met het gegeven orderId");
             }
 
+            if (amount < 1)
+            {
+                throw new DataException("De hoeveelheid moet groter zijn dan 0");
+            }
 
             var toUpdateOrder = context.Orders.Single(o => o.Id == orderId);
 
-            if(toUpdateOrder.Product != product)
+            if (toUpdateOrder.Product != product)
             {
                 throw new DataException("Het product van het gegeven orderId is niet hetzelfde als het meegegeven product");
             }

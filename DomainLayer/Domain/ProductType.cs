@@ -1,12 +1,7 @@
 ﻿namespace DomainLayer.Domain
 {
-    /// <summary>
-    /// Contains each type of product
-    /// </summary>
-    public class ProductEnum
-    {
         /// <summary>
-        /// Type of prodect.
+        /// Type of product.
         /// </summary>
         public enum ProductType
         {
@@ -15,5 +10,4 @@
             Orval,
             Duvel
         }
-    }
 }

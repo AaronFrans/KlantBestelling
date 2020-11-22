@@ -1,12 +1,12 @@
 ﻿using DomainLayer.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace DomainLayer
 {
-    class Manager
+    public class Manager
     {
         private IUnitOfWork uow;
 
@@ -26,7 +26,11 @@ namespace DomainLayer
         /// <returns>New id of the client.</returns>
         public int AddClient(Client client)
         {
-            return uow.Clients.AddClient(client);
+            uow.Clients.AddClient(client);
+            uow.Complete();
+            var toReturn = uow.Clients.GetClient(client.Name, client.Addres).Id;
+            uow.Complete();
+            return toReturn;
         }
 
         /// <summary>
@@ -70,7 +74,11 @@ namespace DomainLayer
         /// <returns></returns>
         public int MakeOrder(int clientId, ProductType product, int amount)
         {
-            return uow.Orders.MakeOrder(clientId, product, amount);
+            uow.Orders.MakeOrder(clientId, product, amount);
+            uow.Complete();
+            var toReturn = uow.Orders.GetOrder(product, clientId).Id;
+            uow.Complete();
+            return toReturn;
         }
 
         /// <summary>
@@ -81,6 +89,9 @@ namespace DomainLayer
         /// <returns>The order from the database that corresponds with the given order id.</returns>
         public Order GetOrder(int orderId, int clientId)
         {
+            var client = uow.Clients.GetClient(clientId);
+            uow.Complete();
+
             var order = uow.Orders.GetOrder(orderId, clientId);
             uow.Complete();
             return order;

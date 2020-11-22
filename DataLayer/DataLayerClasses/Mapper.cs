@@ -1,6 +1,7 @@
 ﻿using DomainLayer.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DataLayer.DataLayerClasses
@@ -51,6 +52,7 @@ namespace DataLayer.DataLayerClasses
             foreach (var item in dClient.Orders)
             {
                 toReturn.AddOrder(item.Product, item.Amount);
+                toReturn.Orders.Last().Id = item.Id;
 
             }
 

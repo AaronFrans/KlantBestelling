@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace DataLayer.DataLayerClasses
 {
+    /// <summary>
+    /// A client in the database.
+    /// </summary>
     public class DClient
     {
         /// <summary>

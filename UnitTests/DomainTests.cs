@@ -4,7 +4,6 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace UnitTests
 {
@@ -56,6 +55,10 @@ namespace UnitTests
 
             act = () => new Order(orderProductType, orderAmount, client);
             act.Should().NotThrow<DomainException>();
+
+            act = () => new Order(orderProductType, orderAmount, null);
+
+            act.Should().Throw<DomainException>().WithMessage("De client van een order mag niet leeg zijn");
         }
 
         /// <summary>
@@ -97,6 +100,18 @@ namespace UnitTests
             client.Orders[0].Amount.Should().Be(expectedAmount);
             client.Orders[1].Product.Should().Be(expectedTypeTwo);
             client.Orders[1].Amount.Should().Be(expectedAmountTwo);
+
+            expectedLenght -= 1;
+
+            Action act =() =>  client.RemoveOrder(ProductType.Orval);
+
+            act.Should().Throw<DomainException>().WithMessage("De klant heeft geen order van dit type");
+
+            client.RemoveOrder(expectedTypeTwo);
+
+            client.Orders.Count.Should().Be(expectedLenght);
+
+
         }
 
         /// <summary>

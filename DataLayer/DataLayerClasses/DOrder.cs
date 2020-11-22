@@ -1,10 +1,10 @@
 ﻿
+using DomainLayer.Domain;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace DataLayer.DataLayerClasses
 {
