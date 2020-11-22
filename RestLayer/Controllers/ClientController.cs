@@ -9,9 +9,9 @@ namespace RestLayer.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private Manager manager;
+        private IManager manager;
 
-        public ClientController(Manager manager)
+        public ClientController(IManager manager)
         {
             this.manager = manager;
         }
@@ -53,7 +53,7 @@ namespace RestLayer.Controllers
         {
             try
             {
-                return Mapper.ToRClientOutput(manager.GetClient(id));
+                return Ok(Mapper.ToRClientOutput(manager.GetClient(id)));
 
             }
             catch (Exception ex)
@@ -82,10 +82,8 @@ namespace RestLayer.Controllers
                 {
                     throw new RestException("De id in de url en in de body komen niet overeen.");
                 }
-
-                var clientDB = manager.GetClient(id);
                 manager.UpdateClient(id, Mapper.ToClient(client));
-                return Mapper.ToRClientOutput(manager.GetClient(id));
+                return Ok(Mapper.ToRClientOutput(manager.GetClient(id)));
 
             }
             catch (Exception ex)
@@ -129,14 +127,14 @@ namespace RestLayer.Controllers
                 {
                     throw new RestException("Er moet een order zijn om te posten.");
                 }
-                if (id != orderInfo.CientId)
+                if (id != orderInfo.ClientId)
                 {
                     throw new RestException("De id in de url en in de body komen niet overeen.");
                 }
 
-                int newOrderId = manager.MakeOrder(orderInfo.CientId, Mapper.ToProductType(orderInfo.Product), orderInfo.Amount);
+                int newOrderId = manager.MakeOrder(orderInfo.ClientId, Mapper.ToProductType(orderInfo.Product), orderInfo.Amount);
 
-                return Mapper.ToROrderOutput(manager.GetOrder(newOrderId, id));
+                return Ok(Mapper.ToROrderOutput(manager.GetOrder(newOrderId, id)));
             }
             catch (Exception ex)
             {
@@ -151,7 +149,7 @@ namespace RestLayer.Controllers
         {
             try
             {
-                return Mapper.ToROrderOutput(manager.GetOrder(orderId, id));
+                return Ok(Mapper.ToROrderOutput(manager.GetOrder(orderId, id)));
             }
             catch (Exception ex)
             {
@@ -169,7 +167,7 @@ namespace RestLayer.Controllers
                 {
                     throw new RestException("Er moet een order zijn om te posten.");
                 }
-                if (id != orderInfo.CientId)
+                if (id != orderInfo.ClientId)
                 {
                     throw new RestException("De id van de klant in de url en in de body komen niet overeen.");
                 }
@@ -178,7 +176,7 @@ namespace RestLayer.Controllers
                     throw new RestException("De id van de bestelling in de url en in de body komen niet overeen.");
                 }
                 manager.UpdateOrder(id, orderId, Mapper.ToProductType(orderInfo.Product), orderInfo.Amount);
-                return Mapper.ToROrderOutput(manager.GetOrder(orderId, id));
+                return Ok(Mapper.ToROrderOutput(manager.GetOrder(orderId, id)));
             }
             catch (Exception ex)
             {
