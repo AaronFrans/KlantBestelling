@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace DomainLayer.Repositories
 {
@@ -15,15 +14,24 @@ namespace DomainLayer.Repositories
         /// Make an order and add it to the database
         /// </summary>
         /// <param name="clientId">Id of the client who makes the order.</param>
-        /// <param name="order">Th order</param>
+        /// <param name="product">The product to order</param>
+        /// <param name="v">The amount to order  order</param>
         /// <returns>The new id int the database</returns>
-        public int MakeOrder(int clientId, ProductType product, int amount);
+        public void MakeOrder(int clientId, ProductType product, int amount);
         /// <summary>
-        /// Retrieve an order froom the database.
+        /// Retrieve an order from the database.
         /// </summary>
         /// <param name="orderId">Id of the order.</param>
+        /// /// <param name="clientId">Id of the client.</param>
         /// <returns>The order from the database</returns>
         public Order GetOrder(int orderId, int clientId);
+        /// <summary>
+        /// Retrieve an order from the database.
+        /// </summary>
+        /// <param name="product">Product that was ordered.</param>
+        /// <param name="clientId">Id of the client.</param>
+        /// <returns>The order from the database</returns>
+        public Order GetOrder(ProductType product, int clientId);
         /// <summary>
         /// Update an order in the database.
         /// </summary>

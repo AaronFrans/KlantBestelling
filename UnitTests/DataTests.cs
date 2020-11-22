@@ -4,7 +4,6 @@ using DomainLayer.Domain;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace UnitTests
 {
@@ -112,9 +111,8 @@ namespace UnitTests
 
             Client client3 = new Client("Test name3", "Test addres3");
 
-            int newId = uow.Clients.AddClient(client3);
-
-            newId.Should().Be(3);
+            uow.Clients.AddClient(client3);
+            uow.Complete();
         }
 
 
@@ -142,7 +140,7 @@ namespace UnitTests
 
             client2.Should().Be(client);
 
-
+            uow.Complete();
         }
 
         /// <summary>
@@ -189,23 +187,21 @@ namespace UnitTests
 
             act.Should().Throw<DataException>().WithMessage("The given clientId is not in the database");
 
-            act = () => uow.Orders.MakeOrder(2, product, amount);
+            uow.Orders.MakeOrder(2, product, amount);
 
-            act.Should().NotThrow<DataException>();
-
-            act = () => uow.Orders.MakeOrder(2, product, amount);
-
-            act.Should().NotThrow<DataException>();
+            uow.Orders.MakeOrder(2, product, amount);
 
             ProductType product2 = ProductType.Leffe;
 
-            int newId = uow.Orders.MakeOrder(2, product2, amount);
+            uow.Orders.MakeOrder(2, product2, amount);
+
+            ProductType product3 = ProductType.Westmalle;
+
+            uow.Orders.MakeOrder(2, product3, amount);
 
             uow.Orders.MakeOrder(3, product2, amount);
 
             uow.Complete();
-
-            newId.Should().Be(3);
         }
 
         /// <summary>
@@ -256,11 +252,12 @@ namespace UnitTests
 
             order.Amount.Should().Be(amount);
 
-            product = ProductType.Leffe;
+            product = ProductType.Westmalle;
 
             act = () => uow.Orders.UpdateOrder(clientId, orderId, product, amount);
 
             act.Should().Throw<DataException>().WithMessage("Het product van het gegeven orderId is niet hetzelfde als het meegegeven product");
+
 
             act = () => uow.Orders.UpdateOrder(3, 1, ProductType.Leffe, 5);
 

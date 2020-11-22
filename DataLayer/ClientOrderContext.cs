@@ -59,6 +59,7 @@ namespace DataLayer
                 SetConnectionString();
             }
             optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         /// <summary>

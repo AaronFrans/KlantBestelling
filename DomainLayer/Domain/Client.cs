@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace DomainLayer.Domain
 {
@@ -60,6 +59,17 @@ namespace DomainLayer.Domain
                 orders.Add(new Order(product, amount, this));
         }
 
+        /// <summary>
+        /// Remove an order based on the product.
+        /// </summary>
+        /// <param name="product">Product to remove</param>
+        public void RemoveOrder(ProductType product)
+        {
+            if (!orders.Any(o => o.Product == product))
+                throw new DomainException("De klant heeft geen order van dit type");
+            else
+                orders.Remove(orders.Single(o => o.Product == product));
+        }
         /// <summary>
         /// Change name of client.
         /// </summary>

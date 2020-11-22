@@ -1,5 +1,4 @@
 ﻿using System;
-using static DomainLayer.Domain.ProductEnum;
 
 namespace DomainLayer.Domain
 {
@@ -26,7 +25,7 @@ namespace DomainLayer.Domain
         public Client Client { get; private set; }
 
         /// <summary>
-        /// Used to make a Order object.
+        /// Used to make an Order object.
         /// </summary>
         /// <param name="product">Product ordered.</param>
         /// <param name="amount">Amount ordered.</param>
@@ -37,6 +36,8 @@ namespace DomainLayer.Domain
             if (amount < 1)
                 throw new DomainException("Het aantal moet groeter zijn dan 1");
             Amount = amount;
+            if(client == null)
+                throw new DomainException("De client van een order mag niet leeg zijn");
             Client = client;
         }
 
