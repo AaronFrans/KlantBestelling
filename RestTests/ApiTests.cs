@@ -53,7 +53,7 @@ namespace RestTests
             Assert.Empty((result.Value as RClientOutput).Orders);
         }
         /// <summary>
-        /// Check for bad result.
+        /// Check for bad  request result.
         /// </summary>
         [Fact]
         public void GetClient_ReturnsBadRequest()
@@ -97,7 +97,7 @@ namespace RestTests
             Assert.Empty((result.Value as RClientOutput).Orders);
         }
         /// <summary>
-        /// Check for bad result.
+        /// Check for bad  request result.
         /// </summary>
         [Fact]
         public void PostClient_ReturnsBadRequest()
@@ -147,7 +147,7 @@ namespace RestTests
             Assert.Empty((result.Value as RClientOutput).Orders);
         }
         /// <summary>
-        /// Check for bad result.
+        /// Check for bad  request result.
         /// </summary>
         [Fact]
         public void PutClient_ReturnsBadRequest()
@@ -171,6 +171,9 @@ namespace RestTests
             var result = clientController.DeleteClient(1);
             Assert.IsType<NoContentResult>(result);
         }
+        /// <summary>
+        /// Check for bad  request result.
+        /// </summary>
         [Fact]
         public void DeleteClient_ReturnsBadRequest()
         {
@@ -180,6 +183,9 @@ namespace RestTests
 
             Assert.IsType<BadRequestObjectResult>(result);
         }
+        /// <summary>
+        /// Check for not found result.
+        /// </summary>
         [Fact]
         public void DeleteClient_ReturnsNotFound()
         {
@@ -351,6 +357,17 @@ namespace RestTests
         /// Check the request return type
         /// </summary>
         [Fact]
+        public void DeleteOrder_ReturnsRequestType()
+        {
+            mockManager.Setup(repo => repo.DeleteOrder(1))
+                .Throws(new Exception("Het gegeven orderId is niet in de database"));
+            var result = clientController.DeleteOrder(1);
+            Assert.IsType<NotFoundObjectResult>(result);
+        }
+        /// <summary>
+        /// Check for bad  request result.
+        /// </summary>
+        [Fact]
         public void DeleteOrder_ReturnsBadRequest()
         {
             mockManager.Setup(repo => repo.DeleteOrder(1));
@@ -358,7 +375,7 @@ namespace RestTests
             Assert.IsType<NoContentResult>(result);
         }
         /// <summary>
-        /// Check the request return type
+        /// Check for not found result.
         /// </summary>
         [Fact]
         public void DeleteOrder_ReturnsNotFound()
@@ -368,17 +385,7 @@ namespace RestTests
             var result = clientController.DeleteOrder(1);
             Assert.IsType<BadRequestObjectResult>(result);
         }
-        /// <summary>
-        /// Check the request return type
-        /// </summary>
-        [Fact]
-        public void DeleteOrder_ReturnsRequestType()
-        {
-            mockManager.Setup(repo => repo.DeleteOrder(1))
-                .Throws(new Exception("Het gegeven orderId is niet in de database"));
-            var result = clientController.DeleteOrder(1);
-            Assert.IsType<NotFoundObjectResult>(result);
-        }
+
         #endregion
         #endregion
     }
