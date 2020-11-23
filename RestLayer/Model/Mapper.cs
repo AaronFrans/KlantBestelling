@@ -47,7 +47,11 @@ namespace RestLayer
             return toReturn;
         }
 
-
+        /// <summary>
+        /// Transforms a string into a ProductType.
+        /// </summary>
+        /// <param name="product">The name of the product.</param>
+        /// <returns>The new product.</returns>
         public static ProductType ToProductType(string product)
         {
             ProductType toReturn;

@@ -12,7 +12,7 @@ namespace RestLayer.Model
         /// Id of the client.
         /// </summary>
         [JsonPropertyName("KlantId")]
-        public int CientId { get; set; }
+        public int ClientId { get; set; }
         /// <summary>
         /// Id of the client.
         /// </summary>
